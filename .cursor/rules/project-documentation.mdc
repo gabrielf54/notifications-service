@@ -1,0 +1,167 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Microsserviço de Notificações SMS
+
+## 1. Objetivo
+
+Criar um microsserviço flexível para envio de mensagens SMS, suportando múltiplos provedores (Twilio e AWS SNS), que pode ser facilmente integrado a qualquer projeto. O serviço permite alternar entre provedores através de configuração simples, sem necessidade de alterar o código.
+
+## 2. Estrutura do Projeto
+
+```
+sms-notification-service/
+├── src/
+│   ├── config/           # Configurações do serviço
+│   ├── controllers/      # Controladores da API
+│   ├── interfaces/       # Interfaces para provedores
+│   ├── providers/        # Implementações dos provedores
+│   ├── routes/          # Rotas da API
+│   ├── services/        # Serviço principal
+│   ├── utils/           # Funções utilitárias
+│   └── app.js           # Aplicação principal
+├── .env.example         # Exemplo de variáveis de ambiente
+├── package.json         # Dependências
+└── README.md            # Documentação
+
+```
+
+## 3. Tecnologias Utilizadas
+
+- **Base**: Node.js
+- **Framework**: Express.js
+- **Provedores SMS**: 
+  - Twilio (com $15 de crédito gratuito)
+  - AWS SNS (100 SMS gratuitos/mês)
+- **Logging**: Winston
+- **Segurança**: Helmet, CORS
+- **Deploy**: Qualquer serviço que suporte Node.js
+
+## 4. Funcionalidades Principais
+
+### 4.1 Envio de SMS
+- Envio de mensagens via Twilio ou AWS SNS
+- Formatação automática de números
+- Retorno detalhado do status do envio
+- Suporte a múltiplos provedores
+
+### 4.2 Gerenciamento de Provedores
+- Alternância fácil entre provedores via configuração
+- Interface padronizada para provedores
+- Tratamento de erros específicos por provedor
+
+### 4.3 API REST
+- Endpoint para envio de SMS
+- Endpoint para verificação de status
+- Respostas padronizadas
+- Logging completo
+
+## 5. Modelo de Dados
+
+### 5.1 Resposta de Envio
+```json
+{
+  "success": true,
+  "provider": "twilio", // ou "aws"
+  "messageId": "SM123456789",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "status": "sent",
+  "details": {
+    "to": "5511999999999",
+    "message": "Sua mensagem aqui",
+    "deliveryStatus": "delivered"
+  }
+}
+```
+
+## 6. Endpoints da API
+
+### 6.1 Mensagens
+- **POST /api/messages**
+    - Enviar novo SMS
+    - Corpo: `{ "to": "5511999999999", "message": "Sua mensagem aqui" }`
+    - Resposta: Status detalhado do envio
+
+### 6.2 Status
+- **GET /api/status**
+    - Verificar status do serviço
+    - Retorna: Provedor atual e status operacional
+
+## 7. Configuração
+
+### 7.1 Variáveis de Ambiente
+```env
+# Escolha do Provedor
+SMS_PROVIDER=twilio # ou aws
+
+# Configuração Twilio
+TWILIO_ACCOUNT_SID=sua-account-sid
+TWILIO_AUTH_TOKEN=seu-auth-token
+TWILIO_PHONE_NUMBER=seu-numero
+
+# Configuração AWS
+AWS_REGION=sua-regiao
+AWS_ACCESS_KEY=sua-access-key
+AWS_SECRET_KEY=sua-secret-key
+```
+
+### 7.2 Passos para Configuração
+
+1. **Twilio**:
+   - Criar conta em twilio.com
+   - Obter Account SID e Auth Token
+   - Verificar número de telefone
+
+2. **AWS SNS**:
+   - Criar conta AWS
+   - Configurar IAM com permissões SNS
+   - Obter credenciais de acesso
+
+## 8. Uso
+
+### 8.1 Envio de SMS
+```bash
+curl -X POST http://localhost:3000/api/messages \
+-H "Content-Type: application/json" \
+-d '{
+    "to": "5511999999999",
+    "message": "Teste de SMS"
+}'
+```
+
+### 8.2 Verificar Status
+```bash
+curl -X GET http://localhost:3000/api/status
+```
+
+## 9. Vantagens
+
+### 9.1 Flexibilidade
+- Alternância fácil entre provedores
+- Interface padronizada
+- Código limpo e modular
+
+### 9.2 Confiabilidade
+- Provedores estabelecidos
+- Tratamento de erros robusto
+- Logging completo
+
+### 9.3 Custo
+- Opções gratuitas disponíveis
+- Escolha do provedor baseada em custos
+- Fácil migração entre provedores
+
+## 10. Próximos Passos
+
+1. Implementar novos provedores
+2. Adicionar suporte a templates
+3. Implementar fila de mensagens
+4. Adicionar métricas de uso
+5. Implementar webhooks para status
+6. Adicionar autenticação na API
+
+---
+
+Esta documentação fornece um guia completo para implementação e uso do microsserviço de notificações SMS. O foco é na flexibilidade e facilidade de uso, permitindo alternar entre provedores sem alterar o código da aplicação.

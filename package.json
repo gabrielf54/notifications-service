@@ -1,0 +1,26 @@
+{
+  "name": "sms-notification-service",
+  "version": "1.0.0",
+  "description": "SMS notification service supporting Twilio and AWS SNS",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "twilio": "^4.20.1",
+    "aws-sdk": "^2.1552.0",
+    "dotenv": "^16.4.5",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "jest": "^29.7.0",
+    "eslint": "^9.0.0"
+  }
+} 
