@@ -1,30 +1,63 @@
 const smsService = require('../services/sms.service');
+const SMSValidator = require('../validators/sms.validator');
+const { ValidationError, ProviderError, ServiceError } = require('../utils/errors');
 const logger = require('../utils/logger');
 
 class MessageController {
   async sendMessage(req, res) {
     try {
-      const { to, message } = req.body;
+      // Validar dados de entrada
+      const validatedData = SMSValidator.validateSendSMS(req.body);
 
-      if (!to || !message) {
-        return res.status(400).json({
-          success: false,
-          error: 'Missing required fields: to and message'
-        });
-      }
+      // Enviar SMS
+      const result = await smsService.sendSMS(validatedData.to, validatedData.message);
 
-      const result = await smsService.sendSMS(to, message);
-
-      if (!result.success) {
-        return res.status(500).json(result);
-      }
-
+      // Retornar resposta
       res.json(result);
     } catch (error) {
       logger.error('Error in sendMessage:', error);
+
+      // Tratamento específico para cada tipo de erro
+      if (error instanceof ValidationError) {
+        return res.status(error.statusCode).json({
+          success: false,
+          error: {
+            message: error.message,
+            field: error.field,
+            type: 'validation'
+          }
+        });
+      }
+
+      if (error instanceof ProviderError) {
+        return res.status(error.statusCode).json({
+          success: false,
+          error: {
+            message: error.message,
+            provider: error.provider,
+            type: 'provider'
+          }
+        });
+      }
+
+      if (error instanceof ServiceError) {
+        return res.status(error.statusCode).json({
+          success: false,
+          error: {
+            message: error.message,
+            service: error.service,
+            type: 'service'
+          }
+        });
+      }
+
+      // Erro genérico
       res.status(500).json({
         success: false,
-        error: error.message
+        error: {
+          message: 'Internal server error',
+          type: 'internal'
+        }
       });
     }
   }
