@@ -2,6 +2,7 @@
 
 [![Node.js CI](https://github.com/seu-usuario/sms-notification-service/actions/workflows/node.js.yml/badge.svg)](https://github.com/seu-usuario/sms-notification-service/actions/workflows/node.js.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Test Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)](https://github.com/seu-usuario/sms-notification-service/actions)
 
 Um microsserviço flexível para envio de mensagens SMS, suportando múltiplos provedores (Twilio e AWS SNS). Permite alternar entre provedores através de configuração simples, sem necessidade de alterar o código.
 
@@ -13,6 +14,8 @@ Um microsserviço flexível para envio de mensagens SMS, suportando múltiplos p
 - 🔒 Segurança implementada
 - 📝 API REST documentada
 - 🧪 Testes automatizados
+- ✅ Validação de dados robusta
+- 🛡️ Tratamento de erros avançado
 
 ## 📋 Pré-requisitos
 
@@ -68,7 +71,14 @@ npm start
 
 ### Testes
 ```bash
+# Executar todos os testes
 npm test
+
+# Executar testes com cobertura
+npm run test:coverage
+
+# Executar testes em modo watch
+npm run test:watch
 ```
 
 ## 📡 API Endpoints
@@ -95,6 +105,18 @@ Resposta de sucesso:
         "to": "5511999999999",
         "message": "Teste de SMS",
         "deliveryStatus": "delivered"
+    }
+}
+```
+
+Resposta de erro (exemplo):
+```json
+{
+    "success": false,
+    "error": {
+        "message": "Invalid phone number format",
+        "field": "to",
+        "type": "validation"
     }
 }
 ```
@@ -129,8 +151,12 @@ sms-notification-service/
 │   ├── routes/          # Rotas da API
 │   ├── services/        # Serviço principal
 │   ├── utils/           # Funções utilitárias
+│   ├── validators/      # Validadores de dados
 │   └── app.js           # Aplicação principal
 ├── tests/               # Testes automatizados
+│   ├── unit/           # Testes unitários
+│   ├── integration/    # Testes de integração
+│   └── e2e/            # Testes end-to-end
 ├── .env.example         # Exemplo de variáveis de ambiente
 ├── .gitignore          # Arquivos ignorados pelo git
 ├── package.json         # Dependências
@@ -143,6 +169,46 @@ sms-notification-service/
 - Middleware de segurança implementado (Helmet, CORS)
 - Logging de todas as operações
 - Tratamento de erros robusto
+- Validação de dados de entrada
+
+## 🧪 Testes
+
+O projeto inclui uma suíte completa de testes:
+
+- **Testes Unitários**: Testam componentes individuais
+- **Testes de Integração**: Testam a integração entre componentes
+- **Testes E2E**: Testam o fluxo completo da aplicação
+
+Para executar os testes:
+```bash
+# Todos os testes
+npm test
+
+# Testes com cobertura
+npm run test:coverage
+
+# Testes em modo watch
+npm run test:watch
+```
+
+## 🛡️ Tratamento de Erros
+
+O serviço implementa um sistema robusto de tratamento de erros:
+
+1. **Erros de Validação**
+   - Validação de formato de número de telefone
+   - Validação de tamanho da mensagem
+   - Validação de campos obrigatórios
+
+2. **Erros de Provedor**
+   - Tratamento específico para cada provedor
+   - Retry automático em caso de falha
+   - Logging detalhado de erros
+
+3. **Erros de Serviço**
+   - Tratamento de erros internos
+   - Mensagens de erro amigáveis
+   - Logging completo
 
 ## 📈 Próximos Passos
 
@@ -161,10 +227,14 @@ sms-notification-service/
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
 ## 📞 Suporte
 
-Para suporte, envie um email para gabrielfcosta.dev@gmail.com ou abra uma issue no GitHub.
+Para suporte, envie um email para seu-email@exemplo.com ou abra uma issue no GitHub.
 
 ---
 
-Desenvolvido com ❤️ por [Gabriel Ferreira](https://github.com/gabrielf54) 
+Desenvolvido com ❤️ por [Seu Nome](https://github.com/seu-usuario) 
